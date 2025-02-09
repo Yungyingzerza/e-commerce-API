@@ -63,4 +63,10 @@ class User extends Authenticatable
      */
     public $incrementing = false; // Disable auto-incrementing
     protected $keyType = 'uuid'; // Set UUID as key type
+
+    // Relationship with UserAddress model
+    public function userAddresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
 }

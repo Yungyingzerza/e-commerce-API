@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Validator;
@@ -57,9 +55,6 @@ class RegisteredUserController extends Controller
 
         // Trigger the Registered event (optional)
         event(new Registered($user));
-
-        // Log the user in immediately after registration (optional)
-        Auth::login($user);
 
         // Return a JSON response with status 201 (Created) and user data
         return response()->json([
