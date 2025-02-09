@@ -15,12 +15,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->authenticate();
-
-        $request->session()->regenerate();
-
-        // return response()->noContent();
-        return response()->json(["message"=> "Login successful"], 200);
+        try {
+            $request->authenticate();
+            $token = $request->user()->createToken('API Token')->plainTextToken;
+            $request->session()->regenerate();
+            
+            return response()->json(['message' => 'Login successful', 'token' => $token], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(["error" => "Invalid credentials"], 401);
+        }
     }
 
     /**

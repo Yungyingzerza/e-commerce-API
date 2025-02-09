@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Validator;
 
 class RegisteredUserController extends Controller
 {
@@ -20,19 +21,39 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the incoming request
-        $validated = $request->validate([
+        // Create a validator instance
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'surname' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Check if the validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Bad request, validation failed.',
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+
+        // If validation passes, you can access validated data
+        $validated = $validator->validated();
+
         // Create the new user
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
+        try {
+            $user = User::create([
+                'name' => $validated['name'],
+                'surname' => $validated['surname'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Internal server error, failed to create user.',
+                'error' => "Dev error",
+            ], 500);
+        }
 
         // Trigger the Registered event (optional)
         event(new Registered($user));
