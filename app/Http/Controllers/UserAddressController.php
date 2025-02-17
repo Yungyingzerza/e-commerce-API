@@ -25,6 +25,15 @@ class UserAddressController extends Controller
     // Store a new address for the authenticated user
     public function store(Request $request)
     {
+
+        // Check if the user is authenticated using Sanctum
+        if (!auth('sanctum')->check()) {
+            return response()->json([
+                'message' => 'Unauthenticated',
+            ], 403);
+        }
+
+
         // Create a validator instance
         $validator = Validator::make($request->all(), [
             'address' => ['required', 'string', 'max:255'],
@@ -40,13 +49,7 @@ class UserAddressController extends Controller
 
         // If validation passes, you can access validated data
         $validated = $validator->validated();
-
-        // Check if the user is authenticated using Sanctum
-        if (!auth('sanctum')->check()) {
-            return response()->json([
-                'message' => 'Unauthenticated',
-            ], 403);
-        }
+        
 
         // If user is authenticated, create the address
         try {
