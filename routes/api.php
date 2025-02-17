@@ -18,4 +18,4 @@ Route::prefix('user')->group(function () {
     Route::post('/addresses', [UserAddressController::class, 'store']); // Create a new address
     Route::put('/addresses/{id}', [UserAddressController::class, 'update']); // Update an existing address
     Route::delete('/addresses/{id}', [UserAddressController::class, 'destroy']); // Delete an address
-});
+});// Test
