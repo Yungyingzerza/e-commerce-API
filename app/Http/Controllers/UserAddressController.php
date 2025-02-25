@@ -13,7 +13,7 @@ class UserAddressController extends Controller
         // Check if the user is authenticated using Sanctum
         if (!auth('sanctum')->check()) {
             return response()->json([
-                'error' => 'Unauthenticated'
+            'error' => 'Unauthenticated'
             ], 403);
         }
 
