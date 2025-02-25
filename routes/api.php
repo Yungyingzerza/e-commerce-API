@@ -22,4 +22,12 @@ Route::prefix('user')->group(function () {
     Route::put('/balance/{id}', [UserController::class, 'updateBalance']); // Update the balance for the user
 });
 
+Route::prefix('product')->group(function () {
+    Route::get('/', [ProductController::class, 'index']); // List all products
+    Route::post('/', [ProductController::class, 'store']); // Create a new product
+    Route::put('/{id}', [ProductController::class, 'update']); // Update an existing product
+    Route::delete('/{id}', [ProductController::class, 'destroy']); // Delete a product
+    Route::post('/{id}/comment', [ProductController::class, 'comment']); // Comment on a product
+    Route::post('/{id}/order', [ProductController::class, 'order']); // Order a product
+});
 
