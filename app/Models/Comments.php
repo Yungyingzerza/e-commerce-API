@@ -37,6 +37,6 @@ class Comments extends Model
     // Relationship with User model
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(User::class);
     }
 }

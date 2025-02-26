@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-class discount_codes extends Model
+class DiscountCode extends Model
 {
         // Tell Eloquent that the primary key is a UUID and it's not auto-incrementing
         protected $keyType = 'string';
