@@ -69,4 +69,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserAddress::class);
     }
+
+    // Relationship with Orders model
+    public function orders()
+    {
+        return $this->hasMany(Orders::class);
+    }
+
+    // Relationship with Wishlists model
+    public function wishLists()
+    {
+        return $this->hasMany(Wishlists::class);
+    }
+
+    // Relationship with Comments model
+    public function comments()
+    {
+        return $this->hasMany(Comments::class);
+    }
+
+
 }
