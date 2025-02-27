@@ -12,24 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('category', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id(); // Auto-incrementing primary key
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();
         });
-
+        
         Schema::create('product', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('category_id');
+            $table->unsignedBigInteger('category_id'); // Use unsigned big integer for foreign key
             $table->string('name');
             $table->text('description')->nullable();
             $table->double('price')->default(0);
             $table->integer('stock')->default(0);
             $table->timestamps();
-
+        
             $table->index('category_id');
             $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
         });
+        
 
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('id')->primary();

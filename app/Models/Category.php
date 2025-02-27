@@ -10,7 +10,9 @@ class Category extends Model
 {
     // Tell Eloquent that the primary key is a UUID and it's not auto-incrementing
     protected $keyType = 'string';
-    public $incrementing = false;
+    public $incrementing = true;
+    protected $table = 'category'; // Set the correct table name
+
 
     //fillable fields is product
     protected $fillable = [
@@ -20,11 +22,6 @@ class Category extends Model
 
     protected static function booted()
     {
-        static::creating(function ($category) {
-            if (empty($category->id)) {
-                $category->id = Str::uuid();  // Generate a UUID if not already set
-            }
-        });
     }
 
     // Relationship with UserAddress model
