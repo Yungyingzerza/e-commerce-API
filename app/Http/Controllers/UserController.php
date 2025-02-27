@@ -27,6 +27,13 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
 
+            // Optional: Ensure the authenticated user can update the balance
+            if ($user->id !== auth('sanctum')->user()->id) {
+                return response()->json([
+                    'message' => 'You are not authorized to update this user\'s balance.',
+                ], 403);
+            }
+
             // Update the user's balance
             $user->balance = $request->input('balance');
             $user->save();
