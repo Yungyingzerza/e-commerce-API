@@ -31,7 +31,12 @@ Route::prefix('product')->group(function () {
     Route::delete('/{id}', [ProductController::class, 'destroy']); // Delete a product
     Route::post('/{id}/comment', [ProductController::class, 'comment']); // Comment on a product
     Route::post('/{id}/order', [ProductController::class, 'order']); // Order a product
-    Route::get('/category/', [CategoryController::class, 'category']); // List all categories
-    Route::post('/category/', [CategoryController::class, 'store']); // Create a new category
+});
+
+Route::prefix('category')->group(function () {
+    Route::get('/', [CategoryController::class, 'index']); // List all categories
+    Route::post('/', [CategoryController::class, 'store']); // Create a new category
+    Route::put('/{id}', [CategoryController::class, 'update']); // Update an existing category
+    Route::delete('/{id}', [CategoryController::class, 'destroy']); // Delete a category
 });
 
