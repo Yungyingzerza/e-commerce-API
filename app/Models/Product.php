@@ -10,7 +10,6 @@ class Product extends Model
     // Tell Eloquent that the primary key is a UUID and it's not auto-incrementing
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $table = 'product'; // Set the correct table name
 
     //fillable fields is product
     protected $fillable = [
