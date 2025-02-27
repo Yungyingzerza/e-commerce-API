@@ -11,29 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        Schema::create('category', function (Blueprint $table) {
+            $table->id(); // Auto-incrementing primary key
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();
         });
-
-        Schema::create('products', function (Blueprint $table) {
+        
+        Schema::create('product', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('category_id');
-            $table->uuid('user_id');
+            $table->unsignedBigInteger('category_id'); // Use unsigned big integer for foreign key
             $table->string('name');
             $table->text('description')->nullable();
             $table->double('price')->default(0);
             $table->integer('stock')->default(0);
             $table->timestamps();
-
+        
             $table->index('category_id');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 
             $table->index('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
+        
 
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('id')->primary();

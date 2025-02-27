@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
 
 // Route::get('/user', function (Request $request) {
 //     if (!auth('sanctum')->check()) {
@@ -29,5 +31,12 @@ Route::prefix('product')->group(function () {
     Route::delete('/{id}', [ProductController::class, 'destroy']); // Delete a product
     Route::post('/{id}/comment', [ProductController::class, 'comment']); // Comment on a product
     Route::post('/{id}/order', [ProductController::class, 'order']); // Order a product
+});
+
+Route::prefix('category')->group(function () {
+    Route::get('/', [CategoryController::class, 'index']); // List all categories
+    Route::post('/', [CategoryController::class, 'store']); // Create a new category
+    Route::put('/{id}', [CategoryController::class, 'update']); // Update an existing category
+    Route::delete('/{id}', [CategoryController::class, 'destroy']); // Delete a category
 });
 
