@@ -27,6 +27,6 @@ class Category extends Model
     // Relationship with UserAddress model
     public function product()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Product::class);
     }
 }

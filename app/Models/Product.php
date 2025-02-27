@@ -18,7 +18,8 @@ class Product extends Model
         'description',
         'price',
         'stock',
-        'category_id'
+        'category_id',
+        'user_id'
     ];
 
     protected static function booted()
@@ -33,7 +34,7 @@ class Product extends Model
     // Relationship with UserAddress model
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasOne(Category::class);
     }
 
     // Relationship with Orders model
@@ -58,6 +59,12 @@ class Product extends Model
     public function productImage()
     {
         return $this->hasMany(ProductImage::class);
+    }
+
+    // Relationship with User model
+    public function owner()
+    {
+        return $this->hasOne(User::class);
     }
 
 }
