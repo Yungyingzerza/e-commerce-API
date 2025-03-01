@@ -29,6 +29,11 @@ Route::prefix('product')->group(function () {
     Route::post('/', [ProductController::class, 'store']); // Create a new product
     Route::put('/{id}', [ProductController::class, 'update']); // Update an existing product
     Route::delete('/{id}', [ProductController::class, 'destroy']); // Delete a product
+    Route::get('/image', [ProductController::class, 'getImage']); // Get a single product
+    Route::post('/image', [ProductController::class, 'uploadImage']); // Upload an image for a product
+    Route::delete('/image/{id}', [ProductController::class, 'deleteImage']); // Delete an image for a product
+    Route::put('/image/{id}', [ProductController::class, 'updateImage']); // Update the stock for a product
+    Route::get('/image/{id}', [ProductController::class, 'getProductImage']); // Get a single product
     Route::post('/{id}/comment', [ProductController::class, 'comment']); // Comment on a product
     Route::post('/{id}/order', [ProductController::class, 'order']); // Order a product
 });
