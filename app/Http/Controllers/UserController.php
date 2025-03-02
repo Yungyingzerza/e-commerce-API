@@ -7,6 +7,17 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+
+    public function getUser(Request $request)
+    {
+        if (!auth('sanctum')->check()) {
+            return response()->json([
+                'error' => 'Unauthenticated'
+            ], 403);
+        }
+        return auth('sanctum')->user();
+    }
+
     public function updateBalance(Request $request, $id)
     {
         // Check if the user is authenticated using Sanctum
