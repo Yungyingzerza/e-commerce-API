@@ -2,11 +2,14 @@
 
 namespace Database\Seeders;
 
+use Dom\Comment;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\Comments;
+use App\Models\UserAddress;
 
 class Guitar_Hero extends Seeder
 {
@@ -14,15 +17,22 @@ class Guitar_Hero extends Seeder
     public function run(): void
     {
         User::create([
+            'id' => '47a91dfd-4fee-4b99-ae86-dcd0842f50ce',
             'name' => 'Guitar',
             'surname' => 'Hero',
-            'email' => 'test@gmail.com',
+            'email' => 'jarn_ddang@gmail.com',
             'password' => '12345678',
-            'id' => '47a91dfd-4fee-4b99-ae86-dcd0842f50ce'
+            'balance' => 9999999,
+            'level' => 5
+        ]);
+
+        UserAddress::create([
+            'user_id' => '47a91dfd-4fee-4b99-ae86-dcd0842f50ce',
+            'address' => 'North Korea'
         ]);
 
         $Product = [
-            //['id' => '2ff97732-3b6b-4f78-96b9-98f8006e28db','category_id' => '2ee20250-405f-4c32-bd06-45d02689f5ed', 'user_id' => '47a91dfd-4fee-4b99-ae86-dcd0842f50ce', 'name' => 'Nike Air Mag', 'description' => 'The Air Mag gave us a real opportunity to see the futuristic technology and the opportunities Nike had in the \'80s, moving towards the new millennium,” said Robert Williams, senior brand creative sneaker culture and footwear curation. “The Air Mag explored design concepts and ideas that would be incorporated into future Nike products, such as HyperAdapt and Adapt technology. Its one-of-a-kind design mixed with technology sets the standard for collaboration.', 'price' => 1278375, 'stock' => 3],
+            ['id' => '2ff97732-3b6b-4f78-96b9-98f8006e28db','category_id' => '2ee20250-405f-4c32-bd06-45d02689f5ed', 'user_id' => '47a91dfd-4fee-4b99-ae86-dcd0842f50ce', 'name' => 'Nike Air Mag', 'description' => 'The Air Mag gave us a real opportunity to see the futuristic technology and the opportunities Nike had in the \'80s, moving towards the new millennium,” said Robert Williams, senior brand creative sneaker culture and footwear curation. “The Air Mag explored design concepts and ideas that would be incorporated into future Nike products, such as HyperAdapt and Adapt technology. Its one-of-a-kind design mixed with technology sets the standard for collaboration.', 'price' => 1278375, 'stock' => 3],
             ['id' => '13c9fceb-f6c9-4d1b-9ee0-ff1693443645','category_id' => '2ee20250-405f-4c32-bd06-45d02689f5ed', 'user_id' => '47a91dfd-4fee-4b99-ae86-dcd0842f50ce', 'name' => 'Nike Vomero 18', 'description' => 'Maximum cushioning in the Vomero provides a comfortable ride for everyday runs. Our softest, most cushioned ride has lightweight ZoomX foam stacked on top of responsive ReactX foam in the midsole. Plus, a redesigned traction pattern offers a smooth heel-to-toe transition.', 'price' => 5500, 'stock' => 123],
             ['id' => 'd6b38f32-481d-42ae-891f-8e9a791b992e','category_id' => '2ee20250-405f-4c32-bd06-45d02689f5ed', 'user_id' => '47a91dfd-4fee-4b99-ae86-dcd0842f50ce', 'name' => 'Nike Cortez', 'description' => 'One word: tradition. From track superstar to fashion phenom, the Cortez\'s Retro appeal, sponge-soft midsole and seesaw detailing deliver decade after decade. This iteration combines genuine leather and heart details for a design that\'s destined to be love at first sight.', 'price' => 3600, 'stock' => 34],
             ['id' => 'b5820f4e-c608-4b56-ba3b-50bd3f18b429','category_id' => '2ee20250-405f-4c32-bd06-45d02689f5ed', 'user_id' => '47a91dfd-4fee-4b99-ae86-dcd0842f50ce', 'name' => 'CROCS Baya Clog', 'description' => 'CROCS Baya Clog casual shoes with a twist on the brand\'s signature Classic Clog, feature the lightweight, durable build you love with advanced ventilation for breathability and to help drain water and debris.', 'price' => 2190, 'stock' => 42],
@@ -78,6 +88,14 @@ class Guitar_Hero extends Seeder
 
         foreach ($product_image as $image) {
             ProductImage::create($image);
+        }
+
+        $comment = [
+            ['product_id' => '7828a012-f558-4b12-bf78-ab8d26b8b63b', 'user_id' => '47a91dfd-4fee-4b99-ae86-dcd0842f50ce', 'comment' => 'Nice Jersey. We gonna win the League', 'rating' => 5],
+        ];
+
+        foreach ($comment as $c) {
+            Comments::create($c);
         }
     }
 }
