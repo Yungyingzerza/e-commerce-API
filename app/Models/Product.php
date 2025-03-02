@@ -66,4 +66,10 @@ class Product extends Model
         return $this->hasOne(User::class);
     }
 
+    // Relationship with ProductSize model
+    public function productSize()
+    {
+        return $this->hasMany(ProductSize::class);
+    }
+
 }
