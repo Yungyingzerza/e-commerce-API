@@ -7,21 +7,31 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Product;
 
-class CommentController extends Controller
+class WishListController extends Controller
 {
-    public function index(Request $request, $id)
+    public function index(Request $request)
     {
-        // Get all comments
-        $comments = Product::findOrFail($id)->comments()->get();
+        // Get all wishlist
+        $user = auth('sanctum')->user();
+
+        // Check if user is authenticated
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized. Please log in.',
+            ], 401);
+        }
+
+        // Get all wishlist
+        $wishlist = $user->wishLists()->get();
 
         return response()->json([
-            'message' => 'Successfully retrieved all comments.',
-            'comments' => $comments
+            'message' => 'Successfully retrieved all wishlist.',
+            'wishlist' => $wishlist
         ], 200);
     }
-    public function comment(Request $request)
+    public function wishlist(Request $request)
     {
-        // Comment on a product
+        // Order a product
         $user = auth('sanctum')->user();
 
         // Check if user is authenticated
@@ -34,8 +44,6 @@ class CommentController extends Controller
         // Store a new product
         $validator = Validator::make($request->all(), [
             'product_id' => ['required', 'uuid'],
-            'comment' => ['required', 'string'],
-            'rating' => ['required', 'integer', 'min:1', 'max:5']
         ]);
 
 
@@ -54,20 +62,16 @@ class CommentController extends Controller
 
         // create the product
         try {
-            $product = Product::findOrFail($validated['product_id']);
-            $order = $product->comments()->create([
+            $wishlist = $user->wishLists()->create([
                 'product_id' => $validated['product_id'],
-                'comment' => $validated['comment'],
-                'rating' => $validated['rating'],
-                'user_id' => $user->id
             ]);
             return response()->json([
-                'message' => 'Order created Successfully.',
-                'product' => $order
+                'message' => 'wishlist created Successfully.',
+                'product' => $wishlist
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error, failed to create order.',
+                'message' => 'Internal server error, failed to create wishlist.',
                 'error' => $e->getMessage(), // Debugging: Show actual error
             ], 501);
         }
@@ -88,8 +92,6 @@ class CommentController extends Controller
         // Store a new product
         $validator = Validator::make($request->all(), [
             'product_id' => ['required', 'uuid'],
-            'comment' => ['required', 'string'],
-            'rating' => ['required', 'integer', 'min:1', 'max:5']
         ]);
 
 
@@ -108,19 +110,17 @@ class CommentController extends Controller
 
         // create the product
         try {
-            $comment = $user->comments()->findOrFail($id);
-            $comment->update([
+            $wishlist = $user->wishLists()->findOrFail($id);
+            $wishlist->update([
                 'product_id' => $validated['product_id'],
-                'comment' => $validated['comment'],
-                'rating' => $validated['rating']
             ]);
             return response()->json([
-                'message' => 'comment updated Successfully.',
-                'comment' => $comment
+                'message' => 'wishlist updated Successfully.',
+                'wishlist' => $wishlist
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error, failed to create comment.',
+                'message' => 'Internal server error, failed to create wishlist.',
                 'error' => $e->getMessage(), // Debugging: Show actual error
             ], 501);
         }
@@ -128,7 +128,7 @@ class CommentController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        // Delete an order
+        // Delete an wishlist
         $user = auth('sanctum')->user();
 
         // Check if user is authenticated
@@ -140,15 +140,15 @@ class CommentController extends Controller
 
         // create the product
         try {
-            $comment = $user->comments()->findOrFail($id);
-            $comment->delete();
+            $wishlist = $user->wishLists()->findOrFail($id);
+            $wishlist->delete();
             return response()->json([
-                'message' => 'Comment deleted Successfully.',
-                'Comment' => $comment
+                'message' => 'wishlist deleted Successfully.',
+                'wishlist' => $wishlist
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error, failed to delete Comment.',
+                'message' => 'Internal server error, failed to create wishlist.',
                 'error' => $e->getMessage(), // Debugging: Show actual error
             ], 501);
         }

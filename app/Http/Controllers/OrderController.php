@@ -145,13 +145,6 @@ class OrderController extends Controller
             ], 401);
         }
 
-        // Store a new product
-        $validator = Validator::make($request->all(), [
-            'product_id' => ['required', 'uuid'],
-            'quantity' => ['required', 'integer', 'min:1'],
-            'total_price' => ['required', 'numeric', 'min:0']
-        ]);
-
         // create the product
         try {
             $order = $user->orders()->findOrFail($id);
