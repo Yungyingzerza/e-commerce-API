@@ -73,19 +73,19 @@ class User extends Authenticatable
     // Relationship with Orders model
     public function orders()
     {
-        return $this->belongsTo(Orders::class);
+        return $this->hasMany(Orders::class);
     }
 
     // Relationship with Wishlists model
     public function wishLists()
     {
-        return $this->belongsTo(Wishlists::class);
+        return $this->hasMany(Wishlists::class);
     }
 
     // Relationship with Comments model
     public function comments()
     {
-        return $this->belongsTo(Comments::class);
+        return $this->hasMany(Comments::class);
     }
 
     // Relationship with Product model

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 
 // Route::get('/user', function (Request $request) {
 //     if (!auth('sanctum')->check()) {
@@ -35,8 +36,14 @@ Route::prefix('product')->group(function () {
     Route::delete('/image/{id}', [ProductController::class, 'deleteImage']); // Delete an image for a product
     Route::put('/image/{id}', [ProductController::class, 'updateImage']); // Update the stock for a product
     Route::get('/image/{id}', [ProductController::class, 'getProductImage']); // Get a single product
-    Route::post('/{id}/comment', [ProductController::class, 'comment']); // Comment on a product
-    Route::post('/{id}/order', [ProductController::class, 'order']); // Order a product
+});
+
+Route::prefix('order')->group(function () {
+    Route::post('/', [OrderController::class, 'order']); // Order a product
+    Route::get('/', [OrderController::class, 'index']); // List all orders
+    Route::get('/{id}', [OrderController::class, 'show']); // Get a single order
+    Route::put('/{id}', [OrderController::class, 'update']); // Update an existing order
+    Route::delete('/{id}', [OrderController::class, 'destroy']); // Delete an order
 });
 
 Route::prefix('category')->group(function () {
