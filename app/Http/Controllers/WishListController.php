@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Product;
 
-class OrderController extends Controller
+class WishListController extends Controller
 {
     public function index(Request $request)
     {
-        // Get all orders
+        // Get all wishlist
         $user = auth('sanctum')->user();
 
         // Check if user is authenticated
@@ -20,15 +21,15 @@ class OrderController extends Controller
             ], 401);
         }
 
-        // Get all orders
-        $orders = $user->orders()->get();
+        // Get all wishlist
+        $wishlist = $user->wishLists()->get();
 
         return response()->json([
-            'message' => 'Successfully retrieved all orders.',
-            'orders' => $orders
+            'message' => 'Successfully retrieved all wishlist.',
+            'wishlist' => $wishlist
         ], 200);
     }
-    public function order(Request $request)
+    public function wishlist(Request $request)
     {
         // Order a product
         $user = auth('sanctum')->user();
@@ -43,8 +44,6 @@ class OrderController extends Controller
         // Store a new product
         $validator = Validator::make($request->all(), [
             'product_id' => ['required', 'uuid'],
-            'quantity' => ['required', 'integer', 'min:1'],
-            'total_price' => ['required', 'numeric', 'min:0']
         ]);
 
 
@@ -63,18 +62,16 @@ class OrderController extends Controller
 
         // create the product
         try {
-            $order = $user->orders()->create([
+            $wishlist = $user->wishLists()->create([
                 'product_id' => $validated['product_id'],
-                'quantity' => $validated['quantity'],
-                'total_price' => $validated['total_price'],
             ]);
             return response()->json([
-                'message' => 'Order created Successfully.',
-                'product' => $order
+                'message' => 'wishlist created Successfully.',
+                'product' => $wishlist
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error, failed to create order.',
+                'message' => 'Internal server error, failed to create wishlist.',
                 'error' => $e->getMessage(), // Debugging: Show actual error
             ], 501);
         }
@@ -95,8 +92,6 @@ class OrderController extends Controller
         // Store a new product
         $validator = Validator::make($request->all(), [
             'product_id' => ['required', 'uuid'],
-            'quantity' => ['required', 'integer', 'min:1'],
-            'total_price' => ['required', 'numeric', 'min:0']
         ]);
 
 
@@ -115,19 +110,17 @@ class OrderController extends Controller
 
         // create the product
         try {
-            $order = $user->orders()->findOrFail($id);
-            $order->update([
+            $wishlist = $user->wishLists()->findOrFail($id);
+            $wishlist->update([
                 'product_id' => $validated['product_id'],
-                'quantity' => $validated['quantity'],
-                'total_price' => $validated['total_price'],
             ]);
             return response()->json([
-                'message' => 'Order updated Successfully.',
-                'order' => $order
+                'message' => 'wishlist updated Successfully.',
+                'wishlist' => $wishlist
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error, failed to create order.',
+                'message' => 'Internal server error, failed to create wishlist.',
                 'error' => $e->getMessage(), // Debugging: Show actual error
             ], 501);
         }
@@ -135,7 +128,7 @@ class OrderController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        // Delete an order
+        // Delete an wishlist
         $user = auth('sanctum')->user();
 
         // Check if user is authenticated
@@ -147,15 +140,15 @@ class OrderController extends Controller
 
         // create the product
         try {
-            $order = $user->orders()->findOrFail($id);
-            $order->delete();
+            $wishlist = $user->wishLists()->findOrFail($id);
+            $wishlist->delete();
             return response()->json([
-                'message' => 'Order deleted Successfully.',
-                'order' => $order
+                'message' => 'wishlist deleted Successfully.',
+                'wishlist' => $wishlist
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error, failed to create order.',
+                'message' => 'Internal server error, failed to create wishlist.',
                 'error' => $e->getMessage(), // Debugging: Show actual error
             ], 501);
         }

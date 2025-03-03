@@ -5,32 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Product;
 
-class OrderController extends Controller
+class CommentController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $id)
     {
-        // Get all orders
-        $user = auth('sanctum')->user();
-
-        // Check if user is authenticated
-        if (!$user) {
-            return response()->json([
-                'message' => 'Unauthorized. Please log in.',
-            ], 401);
-        }
-
-        // Get all orders
-        $orders = $user->orders()->get();
+        // Get all comments
+        $comments = Product::findOrFail($id)->comments()->get();
 
         return response()->json([
-            'message' => 'Successfully retrieved all orders.',
-            'orders' => $orders
+            'message' => 'Successfully retrieved all comments.',
+            'comments' => $comments
         ], 200);
     }
-    public function order(Request $request)
+    public function comment(Request $request)
     {
-        // Order a product
+        // Comment on a product
         $user = auth('sanctum')->user();
 
         // Check if user is authenticated
@@ -43,8 +34,8 @@ class OrderController extends Controller
         // Store a new product
         $validator = Validator::make($request->all(), [
             'product_id' => ['required', 'uuid'],
-            'quantity' => ['required', 'integer', 'min:1'],
-            'total_price' => ['required', 'numeric', 'min:0']
+            'comment' => ['required', 'string'],
+            'rating' => ['required', 'integer', 'min:1', 'max:5']
         ]);
 
 
@@ -63,10 +54,12 @@ class OrderController extends Controller
 
         // create the product
         try {
-            $order = $user->orders()->create([
+            $product = Product::findOrFail($validated['product_id']);
+            $order = $product->comments()->create([
                 'product_id' => $validated['product_id'],
-                'quantity' => $validated['quantity'],
-                'total_price' => $validated['total_price'],
+                'comment' => $validated['comment'],
+                'rating' => $validated['rating'],
+                'user_id' => $user->id
             ]);
             return response()->json([
                 'message' => 'Order created Successfully.',
@@ -95,8 +88,8 @@ class OrderController extends Controller
         // Store a new product
         $validator = Validator::make($request->all(), [
             'product_id' => ['required', 'uuid'],
-            'quantity' => ['required', 'integer', 'min:1'],
-            'total_price' => ['required', 'numeric', 'min:0']
+            'comment' => ['required', 'string'],
+            'rating' => ['required', 'integer', 'min:1', 'max:5']
         ]);
 
 
@@ -115,19 +108,19 @@ class OrderController extends Controller
 
         // create the product
         try {
-            $order = $user->orders()->findOrFail($id);
-            $order->update([
+            $comment = $user->comments()->findOrFail($id);
+            $comment->update([
                 'product_id' => $validated['product_id'],
-                'quantity' => $validated['quantity'],
-                'total_price' => $validated['total_price'],
+                'comment' => $validated['comment'],
+                'rating' => $validated['rating']
             ]);
             return response()->json([
-                'message' => 'Order updated Successfully.',
-                'order' => $order
+                'message' => 'comment updated Successfully.',
+                'comment' => $comment
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error, failed to create order.',
+                'message' => 'Internal server error, failed to create comment.',
                 'error' => $e->getMessage(), // Debugging: Show actual error
             ], 501);
         }
@@ -147,15 +140,15 @@ class OrderController extends Controller
 
         // create the product
         try {
-            $order = $user->orders()->findOrFail($id);
-            $order->delete();
+            $comment = $user->comments()->findOrFail($id);
+            $comment->delete();
             return response()->json([
-                'message' => 'Order deleted Successfully.',
-                'order' => $order
+                'message' => 'Comment deleted Successfully.',
+                'Comment' => $comment
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error, failed to create order.',
+                'message' => 'Internal server error, failed to delete Comment.',
                 'error' => $e->getMessage(), // Debugging: Show actual error
             ], 501);
         }
