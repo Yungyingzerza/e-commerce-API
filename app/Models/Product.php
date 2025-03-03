@@ -45,7 +45,7 @@ class Product extends Model
     // Relationship with Comments model
     public function comments()
     {
-        return $this->belongsTo(Comments::class);
+        return $this->hasMany(Comments::class);
     }
 
     // Relationship with Wishlists model

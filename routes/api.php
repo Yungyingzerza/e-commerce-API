@@ -7,6 +7,7 @@ use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CommentController;
 
 // Route::get('/user', function (Request $request) {
 //     if (!auth('sanctum')->check()) {
@@ -41,9 +42,15 @@ Route::prefix('product')->group(function () {
 Route::prefix('order')->group(function () {
     Route::post('/', [OrderController::class, 'order']); // Order a product
     Route::get('/', [OrderController::class, 'index']); // List all orders
-    Route::get('/{id}', [OrderController::class, 'show']); // Get a single order
     Route::put('/{id}', [OrderController::class, 'update']); // Update an existing order
     Route::delete('/{id}', [OrderController::class, 'destroy']); // Delete an order
+});
+
+Route::prefix('comment')->group(function () {
+    Route::post('/', [CommentController::class, 'comment']); // Comment a product
+    Route::get('/{id}', [CommentController::class, 'index']); // List all Comments
+    Route::put('/{id}', [CommentController::class, 'update']); // Update an existing Comment
+    Route::delete('/{id}', [CommentController::class, 'destroy']); // Delete an Comment
 });
 
 Route::prefix('category')->group(function () {
