@@ -13,7 +13,11 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $products = Product::all();
+        // $products = Product::all();
+
+        //get products and their images
+        $products = Product::with('productImage')->get();
+
         return response()->json($products);
     }
 
