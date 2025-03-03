@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\WishListController;
 
 // Route::get('/user', function (Request $request) {
 //     if (!auth('sanctum')->check()) {
@@ -48,9 +49,16 @@ Route::prefix('order')->group(function () {
 
 Route::prefix('comment')->group(function () {
     Route::post('/', [CommentController::class, 'comment']); // Comment a product
-    Route::get('/{id}', [CommentController::class, 'index']); // List all Comments
-    Route::put('/{id}', [CommentController::class, 'update']); // Update an existing Comment
-    Route::delete('/{id}', [CommentController::class, 'destroy']); // Delete an Comment
+    Route::get('/{id}', [CommentController::class, 'index']); // List all Comments  // {id} is id of product
+    Route::put('/{id}', [CommentController::class, 'update']); // Update an existing Comment // {id} is id of comment
+    Route::delete('/{id}', [CommentController::class, 'destroy']); // Delete an Comment // {id} is id of comment
+});
+
+Route::prefix('wishlist')->group(function () {
+    Route::post('/', [WishListController::class, 'wishlist']); // Order a product
+    Route::get('/', [WishListController::class, 'index']); // List all orders
+    Route::put('/{id}', [WishListController::class, 'update']); // Update an existing order
+    Route::delete('/{id}', [WishListController::class, 'destroy']); // Delete an order
 });
 
 Route::prefix('category')->group(function () {
