@@ -19,42 +19,47 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        // Store a new product
+        $user = auth('sanctum')->user();
+
+        // Check if user is authenticated
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized. Please log in.',
+            ], 401);
+        }
+
+        // Validate input
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'uuid'],
-            'user_id' => ['required', 'uuid'],
         ]);
 
-        
-        // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Validation failed',
-                'errors' => $validator->errors() // Show the validation errors
-            ], 422); // 422 Unprocessable Entity
+                'errors' => $validator->errors()
+            ], 422);
         }
-        
 
-        // If validation passes, you can access validated data
+        // Retrieve validated data
         $validated = $validator->validated();
 
-        
-        // create the product
         try {
-            $user = User::findOrFail($validated['user_id']);
             $category = Category::findOrFail($validated['category_id']);
+
+            // Create product
             $product = $category->product()->create([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'price' => $validated['price'],
                 'stock' => $validated['stock'],
                 'category_id' => $validated['category_id'],
-                'user_id' => $validated['user_id']
+                'user_id' => $user->id,
             ]);
+
             return response()->json([
                 'message' => 'Product created successfully.',
                 'product' => $product
@@ -62,23 +67,33 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Internal server error, failed to create product.',
-                'error' => $e->getMessage(), // Debugging: Show actual error
-            ], 501);
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
-    public function update(Request $request, $id) {
+
+    public function update(Request $request, $id)
+    {
+        $user = auth('sanctum')->user();
+
+        // Check if user is authenticated
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized. Please log in.',
+            ], 401);
+        }
+
         // Store a new product
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'numeric', 'min:0'],
-            'category_id' => ['required', 'uuid'],
-            'user_id' => ['required', 'uuid'],
+            'category_id' => ['required', 'uuid']
         ]);
 
-        
+
 
         // Check if validation fails
         if ($validator->fails()) {
@@ -87,22 +102,28 @@ class ProductController extends Controller
                 'errors' => $validator->errors() // Show the validation errors
             ], 422); // 422 Unprocessable Entity
         }
-        
+
 
         // If validation passes, you can access validated data
         $validated = $validator->validated();
 
-        
+
         // create the product
         try {
-            $product = Product::findOrFail($id); 
+            $product = Product::findOrFail($id);
+            // Check if the authenticated user is the owner of the product
+            if ($product->user_id !== $user->id) {
+                return response()->json([
+                    'message' => 'Forbidden. You do not have permission to update this product.',
+                ], 403);
+            }
             $product->update([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'price' => $validated['price'],
                 'stock' => $validated['stock'],
                 'category_id' => $validated['category_id'],
-                'user_id' => $validated['user_id']
+                'user_id' => $user->id,
             ]);
             return response()->json([
                 'message' => 'Product updated Successfully.',
@@ -118,10 +139,23 @@ class ProductController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        $user = auth('sanctum')->user();
+
+        // Check if user is authenticated
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized. Please log in.',
+            ], 401);
+        }
         try {
             // Find product by ID
             $product = Product::findOrFail($id);
-
+            // Check if the authenticated user is the owner of the product
+            if ($product->user_id !== $user->id) {
+                return response()->json([
+                    'message' => 'Forbidden. You do not have permission to update this product.',
+                ], 403);
+            }
             // Delete the product
             $product->delete();
 
