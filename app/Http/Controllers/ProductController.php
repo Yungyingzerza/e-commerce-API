@@ -17,6 +17,24 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    public function show(Request $request, $id)
+    {
+        try {
+            // Find product by ID
+            $product = Product::findOrFail($id);
+
+            // Return a JSON response with the product
+            return response()->json([
+                'product' => $product
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Internal server error, failed to get product.',
+                'error' =>  $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         $user = auth('sanctum')->user();

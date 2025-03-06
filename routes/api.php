@@ -30,6 +30,7 @@ Route::prefix('user')->group(function () {
 
 Route::prefix('product')->group(function () {
     Route::get('/', [ProductController::class, 'index']); // List all products
+    Route::get('/{id}', [ProductController::class, 'show']); // List all products
     Route::post('/', [ProductController::class, 'store']); // Create a new product
     Route::put('/{id}', [ProductController::class, 'update']); // Update an existing product
     Route::delete('/{id}', [ProductController::class, 'destroy']); // Delete a product
