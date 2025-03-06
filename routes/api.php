@@ -39,6 +39,10 @@ Route::prefix('product')->group(function () {
     Route::delete('/image/{id}', [ProductController::class, 'deleteImage']); // Delete an image for a product
     Route::put('/image/{id}', [ProductController::class, 'updateImage']); // Update the stock for a product
     Route::get('/image/{id}', [ProductController::class, 'getProductImage']); // Get a single product
+    Route::get('/size/{id}', [ProductController::class, 'getSize']); // Get a single product
+    Route::post('/size', [ProductController::class, 'createSize']); // Upload an image for a product
+    Route::delete('/size/{id}', [ProductController::class, 'deleteSize']); // Delete an image for a product
+    Route::put('/size/{id}', [ProductController::class, 'updateSize']); // Update the stock for a product
 });
 
 Route::prefix('order')->group(function () {
