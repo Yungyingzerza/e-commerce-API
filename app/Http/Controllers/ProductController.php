@@ -14,8 +14,6 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        // $products = Product::all();
-
         //get products and their images
         $products = Product::with('productImage')->get();
 
@@ -26,7 +24,7 @@ class ProductController extends Controller
     {
         try {
             // Find product by ID
-            $product = Product::findOrFail($id);
+            $product = Product::with('productImage')->findOrFail($id);
 
             // Return a JSON response with the product
             return response()->json([
