@@ -14,8 +14,8 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        //get products and their images
-        $products = Product::with('productImage')->get();
+        //get products and their images ordered by created_at
+        $products = Product::with('productImage')->orderBy('created_at', 'desc')->get();
 
         return response()->json($products);
     }
