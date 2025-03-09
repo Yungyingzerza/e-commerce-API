@@ -20,11 +20,45 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    public function getRecent(Request $request)
+    {
+        //get products and their images 10 most recent products
+        $products = Product::with('productImage')->orderBy('created_at', 'desc')->take(10)->get();
+
+        return response()->json($products);
+    }
+
+    public function getProductByCategoryName(Request $request, $categoryName)
+    {
+        try {
+            // Find category by name
+            $category = Category::where('name', $categoryName)->first();
+            if (!$category) {
+                return response()->json([
+                    'message' => 'Category not found',
+                ], 404);
+            }
+            // Find products by category ID
+            $products = Product::with('productImage')->where('category_id', $category->id)->get();
+
+            // Return a JSON response with the products
+            return response()->json(
+                $products
+            , 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Internal server error, failed to get products.',
+                'error' =>  $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+
     public function show(Request $request, $id)
     {
         try {
             // Find product by ID
-            $product = Product::with('productImage')->findOrFail($id);
+            $product = Product::with('productImage', 'productSize')->findOrFail($id);
 
             // Return a JSON response with the product
             return response()->json([

@@ -30,6 +30,8 @@ Route::prefix('user')->group(function () {
 
 Route::prefix('product')->group(function () {
     Route::get('/', [ProductController::class, 'index']); // List all products
+    Route::get('/recent', [ProductController::class, 'getRecent']); // Get a recent products
+    Route::get('/category/{categoryName}', [ProductController::class, 'getProductByCategoryName']); // Get a single product
     Route::get('/{id}', [ProductController::class, 'show']); // List all products
     Route::post('/', [ProductController::class, 'store']); // Create a new product
     Route::put('/{id}', [ProductController::class, 'update']); // Update an existing product
