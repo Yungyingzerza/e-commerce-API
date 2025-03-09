@@ -43,7 +43,7 @@ class WishListController extends Controller
         }
 
         // Get all wishlist with product details and product image
-        $wishlist = $user->wishLists()->with('product', 'product.productImage')->get();
+        $wishlist = $user->wishLists()->with('product', 'product.productImage')->orderBy('created_at', 'desc')->get();
 
         return response()->json([
             'message' => 'Successfully retrieved all wishlist.',
