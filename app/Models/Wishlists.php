@@ -29,7 +29,7 @@ class Wishlists extends Model
     // Relationship with Product model
     public function product()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     // Relationship with User model 

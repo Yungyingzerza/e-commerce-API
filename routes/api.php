@@ -64,6 +64,7 @@ Route::prefix('comment')->group(function () {
 Route::prefix('wishlist')->group(function () {
     Route::post('/', [WishListController::class, 'wishlist']); // Order a product
     Route::get('/', [WishListController::class, 'index']); // List all orders
+    Route::get('/product/{product_id}', [WishListController::class, 'getWhishListByProduct']); // Get a single order
     Route::put('/{id}', [WishListController::class, 'update']); // Update an existing order
     Route::delete('/{id}', [WishListController::class, 'destroy']); // Delete an order
 });

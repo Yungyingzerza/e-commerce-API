@@ -9,6 +9,27 @@ use App\Models\Product;
 
 class WishListController extends Controller
 {
+
+    public function getWhishListByProduct($product_id)
+    {
+        // Get user
+        $user = auth('sanctum')->user();
+
+        // Check if user is authenticated
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized. Please log in.',
+            ], 401);
+        }
+
+        // Get  a wishlist
+        $wishlist = $user->wishLists()->where('product_id', $product_id)->first();
+
+        return response()->json(
+            $wishlist
+        , 200);
+    }
+
     public function index(Request $request)
     {
         // Get all wishlist
@@ -21,8 +42,8 @@ class WishListController extends Controller
             ], 401);
         }
 
-        // Get all wishlist
-        $wishlist = $user->wishLists()->get();
+        // Get all wishlist with product details and product image
+        $wishlist = $user->wishLists()->with('product', 'product.productImage')->orderBy('created_at', 'desc')->get();
 
         return response()->json([
             'message' => 'Successfully retrieved all wishlist.',
@@ -60,6 +81,15 @@ class WishListController extends Controller
         // If validation passes, you can access validated data
         $validated = $validator->validated();
 
+        // check if already in wishlist
+        $wishlist = $user->wishLists()->where('product_id', $validated['product_id'])->first();
+        if ($wishlist) {
+            return response()->json([
+                'message' => 'Product already in wishlist.',
+                'wishlist' => $wishlist
+            ], 200);
+        }
+
         // create the product
         try {
             $wishlist = $user->wishLists()->create([
@@ -67,7 +97,7 @@ class WishListController extends Controller
             ]);
             return response()->json([
                 'message' => 'wishlist created Successfully.',
-                'product' => $wishlist
+                'wishlist' => $wishlist
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -141,14 +171,20 @@ class WishListController extends Controller
         // create the product
         try {
             $wishlist = $user->wishLists()->findOrFail($id);
+
+            if (!$wishlist) {
+                return response()->json([
+                    'message' => 'wishlist not found.',
+                ], 404);
+            }
+
             $wishlist->delete();
             return response()->json([
-                'message' => 'wishlist deleted Successfully.',
-                'wishlist' => $wishlist
+                'message' => 'wishlist deleted Successfully.'
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error, failed to create wishlist.',
+                'message' => 'Internal server error, failed to delete wishlist.',
                 'error' => $e->getMessage(), // Debugging: Show actual error
             ], 501);
         }
