@@ -82,7 +82,7 @@ class CartController extends Controller
         $user = auth('sanctum')->user();
 
         //check if the product is already in the cart then update the quantity
-        $cart = $user->cart()->where('product_id', $validated['product_id'])->first();
+        $cart = $user->cart()->where('product_id', $validated['product_id'])->where('size', $validated['size'])->first();
         if ($cart) {
             $cart->quantity += $validated['quantity'];
             $cart->save();

@@ -39,7 +39,7 @@ class Product extends Model
     // Relationship with Orders model
     public function orders()
     {
-        return $this->belongsTo(Orders::class);
+        return $this->hasMany(Orders::class);
     }
 
     // Relationship with Comments model

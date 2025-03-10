@@ -32,6 +32,11 @@ class UserAddress extends Model
         });
     }
 
+    // Define the relationship with the Orders model
+    public function orders()
+    {
+        return $this->hasMany(Orders::class);
+    }
 
     
 }

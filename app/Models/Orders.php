@@ -34,12 +34,18 @@ class Orders extends Model
     // Relationship with Product model
     public function product()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     // Relationship with User model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    //Relationship with UserAddress model
+    public function userAddress()
+    {
+        return $this->belongsTo(UserAddress::class, 'address_id');
     }
 }

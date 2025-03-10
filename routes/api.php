@@ -10,6 +10,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\WishListController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\DiscountController;
+
 
 // Route::get('/user', function (Request $request) {
 //     if (!auth('sanctum')->check()) {
@@ -27,6 +29,10 @@ Route::prefix('user')->group(function () {
     Route::put('/addresses/{id}', [UserAddressController::class, 'update']); // Update an existing address
     Route::delete('/addresses/{id}', [UserAddressController::class, 'destroy']); // Delete an address
     Route::put('/balance/{id}', [UserController::class, 'updateBalance']); // Update the balance for the user
+});
+
+Route::prefix('discount')->group(function () {
+    Route::get('/{discountCode}', [DiscountController::class, 'index']); // Get a discount code
 });
 
 Route::prefix('product')->group(function () {
