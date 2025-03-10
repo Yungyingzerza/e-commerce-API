@@ -72,4 +72,10 @@ class Product extends Model
         return $this->hasMany(ProductSize::class);
     }
 
+    // Relationship with Cart model
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
 }
