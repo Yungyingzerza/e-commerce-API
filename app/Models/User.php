@@ -93,4 +93,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Product::class);
     }
+
+    // Relationship with Cart model
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

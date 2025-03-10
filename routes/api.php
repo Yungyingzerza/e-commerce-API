@@ -9,6 +9,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\WishListController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\DiscountController;
+
 
 // Route::get('/user', function (Request $request) {
 //     if (!auth('sanctum')->check()) {
@@ -26,6 +29,10 @@ Route::prefix('user')->group(function () {
     Route::put('/addresses/{id}', [UserAddressController::class, 'update']); // Update an existing address
     Route::delete('/addresses/{id}', [UserAddressController::class, 'destroy']); // Delete an address
     Route::put('/balance/{id}', [UserController::class, 'updateBalance']); // Update the balance for the user
+});
+
+Route::prefix('discount')->group(function () {
+    Route::get('/{discountCode}', [DiscountController::class, 'index']); // Get a discount code
 });
 
 Route::prefix('product')->group(function () {
@@ -46,6 +53,15 @@ Route::prefix('product')->group(function () {
     Route::delete('/size/{id}', [ProductController::class, 'deleteSize']); // Delete an image for a product
     Route::put('/size/{id}', [ProductController::class, 'updateSize']); // Update the stock for a product
 });
+
+Route::prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index']); // List all cart items
+    Route::post('/', [CartController::class, 'store']); // Add a product to the cart
+    Route::get('/count', [CartController::class, 'count']); // Get the total items and total price in the cart
+    Route::put('/{id}', [CartController::class, 'update']); // Update an existing cart item
+    Route::delete('/{id}', [CartController::class, 'destroy']); // Delete a cart item
+});
+
 
 Route::prefix('order')->group(function () {
     Route::post('/', [OrderController::class, 'order']); // Order a product

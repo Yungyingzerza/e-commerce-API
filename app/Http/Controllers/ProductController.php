@@ -58,7 +58,16 @@ class ProductController extends Controller
     {
         try {
             // Find product by ID
-            $product = Product::with('productImage', 'productSize')->findOrFail($id);
+            $product = Product::with([
+                'productImage',
+                'productSize',
+                'comments' => function ($query){
+                    $query->orderBy('created_at', 'desc');
+                },
+                'comments.user' => function ($query) {
+                    $query->select('id', 'name', 'surname', 'profile_url'); // Ensure 'id' is selected for relationship mapping
+                }
+            ])->findOrFail($id);
 
             // Return a JSON response with the product
             return response()->json([

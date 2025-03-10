@@ -39,7 +39,7 @@ class Product extends Model
     // Relationship with Orders model
     public function orders()
     {
-        return $this->belongsTo(Orders::class);
+        return $this->hasMany(Orders::class);
     }
 
     // Relationship with Comments model
@@ -70,6 +70,12 @@ class Product extends Model
     public function productSize()
     {
         return $this->hasMany(ProductSize::class);
+    }
+
+    // Relationship with Cart model
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
     }
 
 }
