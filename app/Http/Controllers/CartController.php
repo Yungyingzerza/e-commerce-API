@@ -48,7 +48,7 @@ class CartController extends Controller
 
         $user = auth('sanctum')->user();
 
-        return response()->json($user->cart()->with('product', 'product.productImage')->get());
+        return response()->json($user->cart()->with('product', 'product.productImage')->orderBy('created_at', 'desc')->get());
     }
 
     public function store(Request $request)
