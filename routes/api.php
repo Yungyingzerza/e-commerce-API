@@ -24,6 +24,7 @@ use App\Http\Controllers\DiscountController;
 
 Route::prefix('user')->group(function () {
     Route::get('/', [UserController::class, 'getUser']); // get user
+    Route::post('/profile', [UserController::class, 'updateProfile']); // Update the profile for the user
     Route::get('/addresses', [UserAddressController::class, 'index']);  // List all addresses for the user
     Route::post('/addresses', [UserAddressController::class, 'store']); // Create a new address
     Route::put('/addresses/{id}', [UserAddressController::class, 'update']); // Update an existing address
