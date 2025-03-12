@@ -43,7 +43,7 @@ class UserController extends Controller
             $profileUrl = $request->file('profile_url')->store('profiles', 'public');
 
             // Update the user's profile_url
-            $user->profile_url = "https://api.yungying.com/luna/" . $profileUrl;
+            $user->profile_url = "https://api.yungying.com/luna/storage/" . $profileUrl;
             
             $user->save();
             
