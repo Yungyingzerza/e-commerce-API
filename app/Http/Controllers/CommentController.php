@@ -19,6 +19,20 @@ class CommentController extends Controller
             'comments' => $comments
         ], 200);
     }
+
+    //get comment from a user with product id
+    public function show(Request $request, $id)
+    {
+        // Get all comments
+        $user = auth('sanctum')->user();
+        $comments = $user->comments()->where('product_id', $id)->get();
+
+        return response()->json([
+            'message' => 'Successfully retrieved all comments.',
+            'comments' => $comments
+        ], 200);
+    }
+
     public function comment(Request $request)
     {
         // Comment on a product
