@@ -76,6 +76,7 @@ Route::prefix('order')->group(function () {
 
 Route::prefix('comment')->group(function () {
     Route::post('/', [CommentController::class, 'comment']); // Comment a product
+    Route::get('/user/{id}', [CommentController::class, 'show']); // Get a single order
     Route::get('/{id}', [CommentController::class, 'index']); // List all Comments  // {id} is id of product
     Route::put('/{id}', [CommentController::class, 'update']); // Update an existing Comment // {id} is id of comment
     Route::delete('/{id}', [CommentController::class, 'destroy']); // Delete an Comment // {id} is id of comment
