@@ -20,6 +20,23 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    public function myProducts(Request $request)
+    {
+        $user = auth('sanctum')->user();
+
+        // Check if user is authenticated
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized. Please log in.',
+            ], 401);
+        }
+
+        //get products and their images ordered by created_at
+        $products = Product::with('productImage')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+
+        return response()->json($products);
+    }
+
     public function getRecent(Request $request)
     {
         //get products and their images 10 most recent products
@@ -99,6 +116,8 @@ class ProductController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'uuid'],
+            "images" => "required|array|min:1",
+            "images.*" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:20480"
         ]);
 
         if ($validator->fails()) {
@@ -123,6 +142,18 @@ class ProductController extends Controller
                 'category_id' => $validated['category_id'],
                 'user_id' => $user->id,
             ]);
+
+            // Upload product images
+            foreach ($request->file('images') as $image) {
+                $imageUrl = $image->store('products', 'public');
+                $product->productImage()->create([
+                    'image_url' => "https://api.yungying.com/luna/storage/" . $imageUrl,
+                    'product_id' => $product->id
+                ]);
+            }
+
+            //return product with images
+            $product = Product::with('productImage')->findOrFail($product->id);
 
             return response()->json([
                 'message' => 'Product created successfully.',
@@ -157,8 +188,6 @@ class ProductController extends Controller
             'category_id' => ['required', 'uuid']
         ]);
 
-
-
         // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
@@ -189,6 +218,10 @@ class ProductController extends Controller
                 'category_id' => $validated['category_id'],
                 'user_id' => $user->id,
             ]);
+
+            //product with images
+            $product = Product::with('productImage')->findOrFail($product->id);
+
             return response()->json([
                 'message' => 'Product updated Successfully.',
                 'product' => $product
@@ -420,10 +453,11 @@ class ProductController extends Controller
 
     public function uploadImage(Request $request)
     {
-        // Store a new product
+        // Validate input
         $validator = Validator::make($request->all(), [
-            'image_url' => ['required', 'string', 'max:2048'],
             'product_id' => ['required', 'exists:products,id'],
+            "images" => "required|array|min:1",
+            "images.*" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:20480"
         ]);
 
         // Check if validation fails
@@ -440,15 +474,24 @@ class ProductController extends Controller
         try {
             // Find product by ID
             $product = Product::findOrFail($validated['product_id']);
-            $image = $product->productImage()->create([
-                'image_url' => $validated['image_url'],
-                'product_id' => $validated['product_id']
-            ]);
+            
 
+            // Upload product images
+            foreach ($request->file('images') as $image) {
+                $imageUrl = $image->store('products', 'public');
+                $product->productImage()->create([
+                    'image_url' => "https://api.yungying.com/luna/storage/" . $imageUrl,
+                    'product_id' => $product->id
+                ]);
+            }
+
+            //return product with images
+            $product = Product::with('productImage')->findOrFail($product->id);
 
             // Return a JSON response with status 200 (OK) and success message
             return response()->json([
-                'message' => 'Product image uploaded successfully'
+                'message' => 'Product image uploaded successfully',
+                'product' => $product
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

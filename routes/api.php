@@ -38,17 +38,19 @@ Route::prefix('discount')->group(function () {
 
 Route::prefix('product')->group(function () {
     Route::get('/', [ProductController::class, 'index']); // List all products
+    Route::get('/myproducts', [ProductController::class, 'myProducts']); // List all products
     Route::get('/recent', [ProductController::class, 'getRecent']); // Get a recent products
-    Route::get('/category/{categoryName}', [ProductController::class, 'getProductByCategoryName']); // Get a single product
-    Route::get('/{id}', [ProductController::class, 'show']); // List all products
-    Route::post('/', [ProductController::class, 'store']); // Create a new product
-    Route::put('/{id}', [ProductController::class, 'update']); // Update an existing product
-    Route::delete('/{id}', [ProductController::class, 'destroy']); // Delete a product
     Route::get('/image', [ProductController::class, 'getImage']); // Get a single product
     Route::post('/image', [ProductController::class, 'uploadImage']); // Upload an image for a product
     Route::delete('/image/{id}', [ProductController::class, 'deleteImage']); // Delete an image for a product
     Route::put('/image/{id}', [ProductController::class, 'updateImage']); // Update the stock for a product
     Route::get('/image/{id}', [ProductController::class, 'getProductImage']); // Get a single product
+    Route::get('/category/{categoryName}', [ProductController::class, 'getProductByCategoryName']); // Get a single product
+    Route::get('/{id}', [ProductController::class, 'show']); // List all products
+    Route::post('/', [ProductController::class, 'store']); // Create a new product
+    Route::post('/{id}', [ProductController::class, 'update']); // Update an existing product
+    Route::delete('/{id}', [ProductController::class, 'destroy']); // Delete a product
+
     Route::get('/size/{id}', [ProductController::class, 'getSize']); // Get a single product
     Route::post('/size', [ProductController::class, 'createSize']); // Upload an image for a product
     Route::delete('/size/{id}', [ProductController::class, 'deleteSize']); // Delete an image for a product
