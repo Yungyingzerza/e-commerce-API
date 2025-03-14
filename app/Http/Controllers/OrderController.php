@@ -23,7 +23,7 @@ class OrderController extends Controller
         }
 
         // Get all orders
-        $orders = $user->orders()->with('product', 'product.productImage', 'userAddress')->get();
+        $orders = $user->orders()->with('product', 'product.productImage', 'userAddress')->orderBy('created_at', 'desc')->get();
 
         return response()->json([
             'message' => 'Successfully retrieved all orders.',
