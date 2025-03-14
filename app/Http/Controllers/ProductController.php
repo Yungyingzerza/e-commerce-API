@@ -20,6 +20,30 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    public function search(Request $request)
+    {
+        // Validate input
+        $validator = Validator::make($request->all(), [
+            'search' => ['required', 'string', 'max:255'],
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors() // Show the validation errors
+            ], 422); // 422 Unprocessable Entity
+        }
+
+        // If validation passes, you can access validated data
+        $validated = $validator->validated();
+
+        //get products and their images ordered by created_at
+        $products = Product::with('productImage')->where('name', 'like', '%' . $validated['search'] . '%')->orderBy('created_at', 'desc')->limit(5)->get();
+
+        return response()->json($products);
+    }
+
     public function myProducts(Request $request)
     {
         $user = auth('sanctum')->user();

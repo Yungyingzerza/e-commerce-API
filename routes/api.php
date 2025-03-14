@@ -38,6 +38,7 @@ Route::prefix('discount')->group(function () {
 
 Route::prefix('product')->group(function () {
     Route::get('/', [ProductController::class, 'index']); // List all products
+    Route::post('/search', [ProductController::class, 'search']); // List all products
     Route::get('/myproducts', [ProductController::class, 'myProducts']); // List all products
     Route::get('/recent', [ProductController::class, 'getRecent']); // Get a recent products
     Route::get('/image', [ProductController::class, 'getImage']); // Get a single product
