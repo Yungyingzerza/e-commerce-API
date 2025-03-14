@@ -55,8 +55,8 @@ class ProductController extends Controller
                     'message' => 'Category not found',
                 ], 404);
             }
-            // Find products by category ID
-            $products = Product::with('productImage')->where('category_id', $category->id)->get();
+            // Find products by category ID and order by created_at most recent
+            $products = Product::with('productImage')->where('category_id', $category->id)->orderBy('created_at', 'desc')->get();
 
             // Return a JSON response with the products
             return response()->json(
