@@ -9,6 +9,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\ProductSize;
+use App\Models\Orders;
 
 class ProductController extends Controller
 {
@@ -57,6 +58,42 @@ class ProductController extends Controller
 
         //get products and their images ordered by created_at
         $products = Product::with('productImage', 'productSize')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+
+        return response()->json($products);
+    }
+
+    //get products by user id
+    public function getProductsByUserId(Request $request, $id)
+    {
+        //get products and their images ordered by created_at
+        $products = Product::with('productImage')->where('user_id', $id)->orderBy('created_at', 'desc')->get();
+
+        //get product owner name surname
+        $user = User::select('name', 'surname')->where('id', $id)->first();
+
+        return response()->json([
+            'products' => $products,
+            'user' => $user
+        ]);
+    }
+
+    //get 2 most ordered products
+    public function dontMissIt(Request $request)
+    {
+        //get products and their images 2 most ordered products
+        $products = Orders::select('product_id')->groupBy('product_id')->orderByRaw('COUNT(*) DESC')->take(2)->get();
+
+        //then get the product details
+        $products = Product::with('productImage')->whereIn('id', $products)->get();
+
+        return response()->json($products);
+    }
+
+    //get random 10 products
+    public function getRandom(Request $request)
+    {
+        //get products and their images 10 random products
+        $products = Product::with('productImage')->inRandomOrder()->limit(10)->get();
 
         return response()->json($products);
     }
