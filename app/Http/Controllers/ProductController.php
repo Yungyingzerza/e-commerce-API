@@ -56,7 +56,7 @@ class ProductController extends Controller
         }
 
         //get products and their images ordered by created_at
-        $products = Product::with('productImage')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $products = Product::with('productImage', 'productSize')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
         return response()->json($products);
     }
@@ -141,13 +141,17 @@ class ProductController extends Controller
             'stock' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'uuid'],
             "images" => "required|array|min:1",
-            "images.*" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:20480"
+            "images.*" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:20480",
+            "size" => "nullable|array|min:1",
+            'size.*.name' => 'required|string',
+            'size.*.stock' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
+                'size' => $request->size
             ], 422);
         }
 
@@ -176,8 +180,24 @@ class ProductController extends Controller
                 ]);
             }
 
-            //return product with images
-            $product = Product::with('productImage')->findOrFail($product->id);
+            //if product size is provided
+            if (is_string($validated['size'])) {
+                $validated['size'] = json_decode($validated['size'], true);
+            }
+            
+            if (!empty($validated['size'])) {
+                foreach ($validated['size'] as $size) {
+                    $product->productSize()->create([
+                        'size' => $size['name'],
+                        'stock' => $size['stock'],
+                        'product_id' => $product->id
+                    ]);
+                }
+            }
+            
+
+            //return product with images and size
+            $product = Product::with('productImage', 'productSize')->findOrFail($product->id);
 
             return response()->json([
                 'message' => 'Product created successfully.',
@@ -243,8 +263,8 @@ class ProductController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            //product with images
-            $product = Product::with('productImage')->findOrFail($product->id);
+            //product with images and size
+            $product = Product::with('productImage', 'productSize')->findOrFail($product->id);
 
             return response()->json([
                 'message' => 'Product updated Successfully.',
@@ -509,8 +529,8 @@ class ProductController extends Controller
                 ]);
             }
 
-            //return product with images
-            $product = Product::with('productImage')->findOrFail($product->id);
+            //return product with images and size
+            $product = Product::with('productImage', 'productSize')->findOrFail($product->id);
 
             // Return a JSON response with status 200 (OK) and success message
             return response()->json([

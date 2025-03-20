@@ -168,6 +168,27 @@ class OrderController extends Controller
         //delete all items in the cart
         $user->cart()->delete();
 
+        //check total order count for upgrade member level Silver, Gold, Platinum
+        $orderCount = $user->orders()->count();
+
+        if ($orderCount >= 5 && $orderCount < 20) {
+            $user->update([
+                'level' => 2
+            ]);
+        } elseif ($orderCount >= 20 && $orderCount < 30) {
+            $user->update([
+                'level' => 3
+            ]);
+        } elseif ($orderCount >= 30) {
+            $user->update([
+                'level' => 4
+            ]);
+        }else{
+            $user->update([
+                'level' => 1
+            ]);
+        }
+
         return response()->json([
             'message' => 'Order created successfully',
         ], 201);
