@@ -33,7 +33,9 @@ class User extends Authenticatable
         'surname',
         'email',
         'password',
-        'profile_url'
+        'profile_url',
+        'balance',
+        'level'
     ];
 
     /**
